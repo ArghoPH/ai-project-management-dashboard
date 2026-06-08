@@ -65,21 +65,21 @@ async function loginDemo(role: Role) {
           <div class="mb-8 flex items-center gap-3">
             <div class="grid h-12 w-12 place-items-center rounded-2xl bg-white text-xl font-black text-slate-950">AI</div>
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.28em] text-blue-300">Backend Auth Added</p>
+              <p class="text-xs font-black uppercase tracking-[0.28em] text-blue-300">Database Auth Added</p>
               <p class="font-black">Project OS</p>
             </div>
           </div>
 
           <h1 class="max-w-2xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">Secure Project Workspace Login</h1>
           <p class="mt-5 max-w-xl leading-7 text-slate-300">
-            This step connects the Vue interface to a Node + Express authentication API using JWT, protected routes and role-based access control.
+            This step connects the Vue interface to a persistent local database API with JWT, protected routes, saved projects and saved Kanban tasks.
           </p>
 
           <div class="mt-8 grid gap-3 sm:grid-cols-3">
             <div class="rounded-3xl bg-white/10 p-4">
               <ShieldCheck class="mb-3 h-6 w-6 text-blue-300" />
-              <p class="text-lg font-black">JWT</p>
-              <p class="text-xs leading-5 text-slate-300">Token session</p>
+              <p class="text-lg font-black">Database</p>
+              <p class="text-xs leading-5 text-slate-300">Persistent data</p>
             </div>
             <div class="rounded-3xl bg-white/10 p-4">
               <LockKeyhole class="mb-3 h-6 w-6 text-blue-300" />
@@ -95,7 +95,7 @@ async function loginDemo(role: Role) {
 
           <div class="mt-8 rounded-3xl border border-white/10 bg-white/10 p-4">
             <p class="text-sm font-black text-blue-200">Backend running at http://localhost:4000</p>
-            <p class="mt-1 text-sm leading-6 text-slate-300">Start the API and Vue app together with <span class="font-black text-white">npm run dev:full</span>.</p>
+            <p class="mt-1 text-sm leading-6 text-slate-300">Start both apps with <span class="font-black text-white">npm run dev:full</span>. Kanban moves now save in the backend database file.</p>
           </div>
         </div>
 

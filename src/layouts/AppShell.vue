@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { BarChart3, Bell, LayoutDashboard, LogOut, PanelTop, Search, UsersRound } from '@lucide/vue'
 import { useAuthStore } from '@/stores/auth'
+import { useProjectStore } from '@/stores/projects'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const projectStore = useProjectStore()
 
 const links = computed(() => [
   { title: 'Dashboard', to: '/dashboard', icon: LayoutDashboard, visible: true },
@@ -16,6 +18,10 @@ const links = computed(() => [
 ])
 
 const visibleLinks = computed(() => links.value.filter(item => item.visible))
+
+onMounted(() => {
+  projectStore.fetchWorkspace()
+})
 
 function logout() {
   auth.logout()

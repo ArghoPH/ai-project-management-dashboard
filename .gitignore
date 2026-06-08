@@ -5,3 +5,5 @@ dist
 .env.local
 .vscode
 .idea
+
+server/data/db.json

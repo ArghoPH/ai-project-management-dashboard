@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
+import { apiRequest } from '@/lib/api'
 import type { Project, Task, TaskStatus } from '@/types/project'
 
-const projects: Project[] = [
+const fallbackProjects: Project[] = [
   {
     id: 'p1',
     name: 'Village Finance AI',
@@ -31,7 +32,7 @@ const projects: Project[] = [
   }
 ]
 
-const tasks: Task[] = [
+const fallbackTasks: Task[] = [
   {
     id: 't1',
     projectId: 'p1',
@@ -75,55 +76,89 @@ const tasks: Task[] = [
     dueDate: '2026-06-09',
     priority: 'Low',
     comments: 1
-  },
-  {
-    id: 't5',
-    projectId: 'p2',
-    title: 'Add biometric verification mock API',
-    description: 'Simulate verification score and error handling.',
-    status: 'todo',
-    assignee: 'Tanvir Hasan',
-    dueDate: '2026-06-25',
-    priority: 'High',
-    comments: 3
-  },
-  {
-    id: 't6',
-    projectId: 'p1',
-    title: 'Prepare analytics export layout',
-    description: 'Weekly progress, workload and risk overview.',
-    status: 'progress',
-    assignee: 'Ariyan Rahman',
-    dueDate: '2026-06-20',
-    priority: 'Medium',
-    comments: 2
   }
 ]
 
+interface TaskStatusResponse {
+  task: Task
+  activity: string[]
+}
+
+function getAuthToken() {
+  return localStorage.getItem('auth_token')
+}
+
 export const useProjectStore = defineStore('projects', {
   state: () => ({
-    projects,
-    tasks,
+    projects: fallbackProjects,
+    tasks: fallbackTasks,
     activity: [
-      'Nusrat moved “Build role-based navigation” to In Progress.',
-      'AI flagged Smart Loan Workflow as high risk.',
-      'Tanvir requested review for Kanban drag flow.'
-    ]
+      'Connect the backend to load persistent project data.',
+      'Move a task in Kanban and refresh to test persistence.',
+      'AI flagged Smart Loan Workflow as high risk.'
+    ],
+    loading: false,
+    error: '',
+    loaded: false
   }),
   getters: {
     totalProjects: state => state.projects.length,
     completedTasks: state => state.tasks.filter(task => task.status === 'done').length,
     overdueTasks: state => state.tasks.filter(task => new Date(task.dueDate) < new Date() && task.status !== 'done').length,
     highRiskProjects: state => state.projects.filter(project => project.riskScore >= 65).length,
-    taskCompletionRate: state => Math.round((state.tasks.filter(task => task.status === 'done').length / state.tasks.length) * 100),
+    taskCompletionRate: state => state.tasks.length ? Math.round((state.tasks.filter(task => task.status === 'done').length / state.tasks.length) * 100) : 0,
     tasksByStatus: state => (status: TaskStatus) => state.tasks.filter(task => task.status === status)
   },
   actions: {
-    moveTask(taskId: string, status: TaskStatus) {
+    async fetchWorkspace(force = false) {
+      const token = getAuthToken()
+      if (!token || (this.loaded && !force)) return
+
+      this.loading = true
+      this.error = ''
+
+      try {
+        const [projects, tasks, activity] = await Promise.all([
+          apiRequest<Project[]>('/projects', { token }),
+          apiRequest<Task[]>('/tasks', { token }),
+          apiRequest<string[]>('/activity', { token })
+        ])
+
+        this.projects = projects
+        this.tasks = tasks
+        this.activity = activity
+        this.loaded = true
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Could not load workspace data'
+      } finally {
+        this.loading = false
+      }
+    },
+    async moveTask(taskId: string, status: TaskStatus) {
       const task = this.tasks.find(item => item.id === taskId)
       if (!task) return
+
+      const previousStatus = task.status
       task.status = status
       this.activity.unshift(`${task.title} moved to ${status.replace('progress', 'in progress')}.`)
+
+      const token = getAuthToken()
+      if (!token) return
+
+      try {
+        const payload = await apiRequest<TaskStatusResponse>(`/tasks/${taskId}/status`, {
+          method: 'PATCH',
+          token,
+          body: JSON.stringify({ status })
+        })
+
+        const updatedIndex = this.tasks.findIndex(item => item.id === taskId)
+        if (updatedIndex !== -1) this.tasks[updatedIndex] = payload.task
+        this.activity = payload.activity
+      } catch (error) {
+        task.status = previousStatus
+        this.error = error instanceof Error ? error.message : 'Could not update task status'
+      }
     }
   }
 })
