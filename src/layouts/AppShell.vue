@@ -109,9 +109,9 @@ function logout() {
             </div>
             <div class="transition-all duration-300 origin-left"
               :class="isCollapsed ? 'opacity-0 scale-95 w-0 pointer-events-none' : 'opacity-100 scale-100 w-auto'">
-              <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">Vue Dashboard
+              <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">Dashboard
               </p>
-              <h1 class="text-base font-bold text-slate-900 whitespace-nowrap">Project OS</h1>
+              <h1 class="text-base font-bold text-slate-900 whitespace-nowrap">Project Management</h1>
             </div>
           </div>
 
