@@ -1,15 +1,11 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss'
+
 export default {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui']
+        sans: ['Google Sans', 'Product Sans', 'Inter', 'system-ui', 'sans-serif'],
       },
-      boxShadow: {
-        soft: '0 24px 80px rgba(15, 23, 42, 0.12)'
-      }
-    }
+    },
   },
-  plugins: []
-}
+} satisfies Config
