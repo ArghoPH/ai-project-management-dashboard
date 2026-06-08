@@ -26,66 +26,87 @@ function onDrop(status: TaskStatus) {
 <template>
   <div class="-mx-3 overflow-x-auto px-3 pb-3 lg:mx-0 lg:px-0">
     <div class="grid min-w-[1080px] grid-cols-4 gap-4 xl:min-w-0">
-      <section
-        v-for="column in columns"
-        :key="column.status"
-        class="min-h-[560px] rounded-[2rem] border border-slate-200 bg-white/75 p-4 transition duration-200"
-        :class="overColumn === column.status ? 'drag-over scale-[1.01]' : ''"
-        @dragover.prevent="overColumn = column.status"
-        @dragleave="overColumn = null"
-        @drop="onDrop(column.status)"
-      >
-        <div class="mb-4 flex items-center justify-between gap-3 rounded-3xl bg-slate-50 p-3">
-          <div class="flex items-center gap-3">
-            <span class="h-10 w-2 rounded-full" :class="column.tone" />
+      <!-- Column Container -->
+      <section v-for="column in columns" :key="column.status"
+        class="flex min-h-[600px] flex-col rounded-2xl border border-slate-200/80 bg-slate-50/40 p-4 transition-all duration-300 backdrop-blur-sm"
+        :class="overColumn === column.status ? 'bg-slate-100/80 ring-2 ring-slate-200 scale-[1.005]' : ''"
+        @dragover.prevent="overColumn = column.status" @dragleave="overColumn = null" @drop="onDrop(column.status)">
+
+        <!-- Column Header -->
+        <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-2.5">
+            <!-- Glow dot based on status color -->
+            <span class="h-2.5 w-2.5 rounded-full" :class="[column.tone, 'ring-current opacity-70']" />
             <div>
-              <h3 class="text-lg font-black text-slate-950">{{ column.title }}</h3>
-              <p class="text-xs font-bold text-slate-400">{{ column.subtitle }}</p>
+              <h3 class="text-sm font-bold text-slate-800 tracking-tight">{{ column.title }}</h3>
+              <p class="text-[10px] font-semibold text-slate-400">{{ column.subtitle }}</p>
             </div>
           </div>
-          <span class="rounded-full bg-white px-3 py-1 text-xs font-black text-slate-600 shadow-sm">
+
+          <!-- Task Count Badge -->
+          <span
+            class="rounded-full bg-white px-2.5 py-0.5 text-xs font-bold text-slate-500 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
             {{ projectStore.tasksByStatus(column.status).length }}
           </span>
         </div>
 
-        <div class="space-y-3">
-          <article
-            v-for="task in projectStore.tasksByStatus(column.status)"
-            :key="task.id"
-            draggable="true"
-            class="cursor-grab rounded-3xl border border-slate-100 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg active:cursor-grabbing"
-            @dragstart="draggingTaskId = task.id"
-            @dragend="draggingTaskId = null; overColumn = null"
-          >
-            <div class="mb-3 flex items-center justify-between gap-2">
-              <span class="rounded-full px-3 py-1 text-[11px] font-black"
-                :class="task.priority === 'Urgent' ? 'bg-red-50 text-red-700' : task.priority === 'High' ? 'bg-orange-50 text-orange-700' : task.priority === 'Medium' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'">
+        <!-- Column Body / Task List -->
+        <div class="flex-1 space-y-3">
+          <article v-for="task in projectStore.tasksByStatus(column.status)" :key="task.id" draggable="true"
+            class="group cursor-grab rounded-xl border border-slate-200/60 bg-white p-4 shadow-[0_2px_6px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_8px_20px_-8px_rgba(0,0,0,0.08)] active:cursor-grabbing"
+            @dragstart="draggingTaskId = task.id" @dragend="draggingTaskId = null; overColumn = null">
+            <!-- Card Header: Priority & Handle -->
+            <div class="mb-2.5 flex items-center justify-between gap-2">
+              <span
+                class="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide"
+                :class="task.priority === 'Urgent' ? 'bg-rose-50 text-rose-700 border border-rose-100/50' :
+                  task.priority === 'High' ? 'bg-amber-50 text-amber-700 border border-amber-100/50' :
+                    task.priority === 'Medium' ? 'bg-blue-50 text-blue-700 border border-blue-100/50' :
+                      'bg-emerald-50 text-emerald-700 border border-emerald-100/50'
+                  ">
+                <span class="h-1 w-1 rounded-full bg-current" />
                 {{ task.priority }}
               </span>
-              <GripVertical class="h-4 w-4 text-slate-300" />
+              <GripVertical class="h-4 w-4 text-slate-300 opacity-0 transition group-hover:opacity-100" />
             </div>
-            <h4 class="font-black leading-5 text-slate-950">{{ task.title }}</h4>
-            <p class="mt-2 text-sm leading-6 text-slate-500">{{ task.description }}</p>
-            <div class="mt-4 flex items-center gap-2 text-xs font-bold text-slate-400">
-              <CalendarClock class="h-4 w-4" /> {{ task.dueDate }}
+
+            <!-- Card Content -->
+            <h4 class="text-sm font-semibold leading-relaxed text-slate-800">{{ task.title }}</h4>
+            <p class="mt-1 text-xs leading-relaxed text-slate-500 line-clamp-2">{{ task.description }}</p>
+
+            <!-- Due Date -->
+            <div class="mt-3.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
+              <CalendarClock class="h-3.5 w-3.5 text-slate-300" />
+              <span>{{ task.dueDate }}</span>
             </div>
-            <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+
+            <!-- Card Footer -->
+            <div class="mt-3.5 flex items-center justify-between border-t border-slate-100 pt-3">
+              <!-- Assignee Avatar -->
               <div class="flex items-center gap-2">
-                <div class="grid h-8 w-8 place-items-center rounded-full bg-slate-950 text-[10px] font-black text-white">
-                  {{ task.assignee.split(' ').map(name => name[0]).join('') }}
+                <div
+                  class="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-tr from-slate-800 to-slate-900 text-[9px] font-bold text-white shadow-sm">
+                  {{task.assignee.split(' ').map(name => name[0]).join('')}}
                 </div>
-                <p class="text-xs font-black text-slate-600">{{ task.assignee }}</p>
+                <p class="text-[11px] font-semibold text-slate-600 truncate max-w-[80px]">{{ task.assignee }}</p>
               </div>
-              <div class="flex items-center gap-1 text-xs font-bold text-slate-400">
-                <MessageCircle class="h-4 w-4" /> {{ task.comments }}
+
+              <!-- Comments count -->
+              <div
+                class="flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-slate-600 transition">
+                <MessageCircle class="h-3.5 w-3.5 text-slate-300" />
+                <span>{{ task.comments }}</span>
               </div>
             </div>
           </article>
 
-          <div v-if="projectStore.tasksByStatus(column.status).length === 0" class="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-5 text-center text-sm font-bold text-slate-400">
-            Drop tasks here
+          <!-- Empty Column State -->
+          <div v-if="projectStore.tasksByStatus(column.status).length === 0"
+            class="flex h-32 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-5 text-center text-xs font-semibold text-slate-400 transition hover:bg-slate-50/80">
+            No tasks • Drop here
           </div>
         </div>
+
       </section>
     </div>
   </div>
