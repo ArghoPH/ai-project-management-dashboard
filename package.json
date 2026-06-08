@@ -1,0 +1,28 @@
+{
+  "name": "vue-ai-project-management-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "vite": "latest",
+    "vue": "latest",
+    "vue-router": "latest",
+    "pinia": "latest",
+    "lucide-vue-next": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest",
+    "vue-tsc": "latest",
+    "@tailwindcss/postcss": "latest"
+  }
+}
