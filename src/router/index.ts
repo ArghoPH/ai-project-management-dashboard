@@ -38,11 +38,19 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(to => {
+router.beforeEach(async to => {
   const auth = useAuthStore()
+
+  if (auth.token && !auth.user) {
+    await auth.loadProfile()
+  }
+
+  if (to.path === '/login' && auth.isAuthenticated) return '/dashboard'
   if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login'
+
   const allowedRoles = to.meta.roles as string[] | undefined
   if (allowedRoles && !allowedRoles.includes(auth.role)) return '/dashboard'
+
   return true
 })
 

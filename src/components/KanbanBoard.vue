@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CalendarClock, GripVertical, MessageCircle } from 'lucide-vue-next'
+import { CalendarClock, GripVertical, MessageCircle } from '@lucide/vue'
 import { useProjectStore } from '@/stores/projects'
 import type { TaskStatus } from '@/types/project'
 

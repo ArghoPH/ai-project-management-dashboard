@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
-import { BarChart3, Bell, LayoutDashboard, LogOut, PanelTop, Search, UsersRound } from 'lucide-vue-next'
+import { BarChart3, Bell, LayoutDashboard, LogOut, PanelTop, Search, UsersRound } from '@lucide/vue'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()

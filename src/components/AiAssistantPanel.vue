@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Bot, CheckCircle2, Sparkles, Wand2 } from 'lucide-vue-next'
+import { Bot, CheckCircle2, Sparkles, Wand2 } from '@lucide/vue'
 import { useProjectStore } from '@/stores/projects'
 
 const projectStore = useProjectStore()

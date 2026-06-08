@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import AppShell from '@/layouts/AppShell.vue'
 import PageHeader from '@/components/PageHeader.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
+
+onMounted(() => {
+  auth.fetchUsers()
+})
 </script>
 
 <template>
@@ -11,7 +16,7 @@ const auth = useAuthStore()
     <PageHeader
       eyebrow="Team Management"
       title="Role-based team visibility."
-      description="This screen demonstrates access control. Team Member role cannot open this page. Cards are responsive for portfolio presentation."
+      description="This screen demonstrates backend-protected access control. Team Member role cannot open this page."
     />
 
     <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

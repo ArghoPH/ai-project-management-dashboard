@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:client": "vite",
+    "dev:server": "node --watch server/index.js",
+    "dev:full": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "start:server": "node server/index.js",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit"
@@ -15,7 +19,12 @@
     "vue": "latest",
     "vue-router": "latest",
     "pinia": "latest",
-    "lucide-vue-next": "latest"
+    "@lucide/vue": "latest",
+    "bcryptjs": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "jsonwebtoken": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -23,6 +32,7 @@
     "tailwindcss": "latest",
     "typescript": "latest",
     "vue-tsc": "latest",
-    "@tailwindcss/postcss": "latest"
+    "@tailwindcss/postcss": "latest",
+    "concurrently": "latest"
   }
 }

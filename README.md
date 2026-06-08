@@ -1,61 +1,97 @@
 # Vue AI Project Management Dashboard
 
-An advanced Vue portfolio project: a role-based project workspace with smart risk scoring, Kanban workflow, analytics, responsive UI and an AI recommendation panel.
+Advanced portfolio project built with **Vue 3 + TypeScript + Pinia + Vue Router + Tailwind CSS v4** and a **Node + Express JWT authentication API**.
 
-## Step 1 Completed: UI Polish + Responsive Design
+## Step 2 status
 
-This version improves the visual quality and mobile usability:
+This version adds a real backend authentication layer:
 
-- Mobile top bar and bottom navigation
-- Responsive dashboard grids
-- Better glassmorphism cards
-- Polished dark hero headers
-- Horizontal-scroll Kanban board on small screens
-- Improved project health cards
-- Improved analytics and team pages
-- Hover states, shadows, gradient progress bars and cleaner spacing
+- Node + Express API
+- JWT login/session flow
+- Password validation with bcrypt
+- Role-based access control
+- Protected frontend routes
+- Backend-protected `/users` API route
+- Demo accounts for Admin, Manager and Team Member
 
-## Features
+## Demo accounts
 
-- Vue 3 + TypeScript + Composition API
-- Pinia state management
-- Vue Router with role-based protected routes
-- Tailwind CSS v4-compatible PostCSS setup
-- Modern responsive dashboard UI
-- Drag-and-drop Kanban board using native browser drag events
-- AI Copilot mock recommendations
-- Project risk score indicators
-- Analytics charts using lightweight custom components
-- Team management page with access control
+All demo users use this password:
 
-## Demo Roles
+```txt
+password123
+```
 
-Use the demo login page to preview the app as:
+| Role | Email | Access |
+|---|---|---|
+| Admin | admin@demo.com | Full access |
+| Manager | manager@demo.com | Projects, analytics and team |
+| Team Member | member@demo.com | Dashboard and Kanban only |
 
-- Admin
-- Manager
-- Team Member
-
-Admin and Manager can access Analytics and Team pages. Team Member can access Dashboard and Kanban only.
-
-## Tech Stack
-
-- Vue 3
-- TypeScript
-- Vite
-- Pinia
-- Vue Router
-- Tailwind CSS
-- Lucide Icons
-
-## Run Locally
+## Install
 
 ```bash
 npm install
+```
+
+## Run client and backend together
+
+```bash
+npm run dev:full
+```
+
+Client:
+
+```txt
+http://localhost:5173
+```
+
+Backend API:
+
+```txt
+http://localhost:4000/api
+```
+
+## Run separately
+
+Terminal 1:
+
+```bash
+npm run dev:server
+```
+
+Terminal 2:
+
+```bash
 npm run dev
 ```
 
-Then open the local Vite URL in your browser.
+## Environment variables
+
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Default development values already work even without `.env`, but production should use a strong `JWT_SECRET`.
+
+## API routes
+
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check API status |
+| POST | `/api/auth/login` | Email/password login |
+| POST | `/api/auth/demo-login` | Quick role login |
+| GET | `/api/auth/me` | Verify current user |
+| GET | `/api/users` | Admin/Manager-only team list |
+| GET | `/api/projects` | Protected project list |
 
 ## Build
 
@@ -63,45 +99,10 @@ Then open the local Vite URL in your browser.
 npm run build
 ```
 
-## Suggested GitHub Repository Name
+## Next roadmap
 
-```bash
-vue-ai-project-management-dashboard
-```
-
-## Next Development Roadmap
-
-### Phase 2: Backend
-
-- Node.js + Express API
-- PostgreSQL or MongoDB database
-- JWT authentication
-- Task CRUD API
-- Project CRUD API
-- Comment and activity log API
-
-### Phase 3: Real AI Integration
-
-- Connect AI Copilot to backend endpoint
-- Generate task summaries
-- Predict deadline risk
-- Suggest task priority
-- Generate weekly meeting notes
-
-### Phase 4: Real-Time Collaboration
-
-- Socket.io notifications
-- Live task movement updates
-- Mentions and comment alerts
-
-### Phase 5: Production Quality
-
-- Unit tests with Vitest
-- E2E tests with Playwright
-- Docker setup
-- CI/CD workflow
-- Deployed live demo
-
-## Portfolio Pitch
-
-This project demonstrates advanced frontend architecture, role-based UX, responsive interface design, data visualization, drag-and-drop interaction, and AI-ready product thinking.
+1. Database with MongoDB or PostgreSQL
+2. Real task/project CRUD API
+3. OpenAI-powered AI Copilot
+4. Socket.io notifications
+5. Deployment on Vercel + Render/Railway
